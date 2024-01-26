@@ -1,14 +1,17 @@
 import { db } from "@/lib/db";
+import { UserRole as PrismaUserRole } from "@prisma/client";
 
 interface User {
   email: string | null;
   password: string | null;
-  // any other properties you expect `user` to have
+  role: PrismaUserRole; 
 }
 
 export const getUserByEmail = async (email: string): Promise<User | Error | null> => {
   try {
     const user = await db.user.findUnique({ where: { email } });
+    console.log("method:",user);
+    
 
     return user;
   } catch (error) {
@@ -16,12 +19,12 @@ export const getUserByEmail = async (email: string): Promise<User | Error | null
   }
 };
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<User | Error | null> => {
     try {
       const user = await db.user.findUnique({ where: { id } });
   
       return user;
     } catch (error) {
-      return error;
+      return error as Error;
     }
   };
