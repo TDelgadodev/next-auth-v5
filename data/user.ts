@@ -1,12 +1,18 @@
 import { db } from "@/lib/db";
 
-export const getUserByEmail = async (email: string) => {
+interface User {
+  email: string | null;
+  password: string | null;
+  // any other properties you expect `user` to have
+}
+
+export const getUserByEmail = async (email: string): Promise<User | Error | null> => {
   try {
     const user = await db.user.findUnique({ where: { email } });
 
     return user;
   } catch (error) {
-    return error;
+    return error as Error;
   }
 };
 
