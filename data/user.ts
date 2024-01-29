@@ -9,9 +9,7 @@ interface User {
 
 export const getUserByEmail = async (email: string): Promise<User | Error | null> => {
   try {
-    const user = await db.user.findUnique({ where: { email } });
-    console.log("method:",user);
-    
+    const user = await db.user.findUnique({ where: { email } });    
 
     return user;
   } catch (error) {
