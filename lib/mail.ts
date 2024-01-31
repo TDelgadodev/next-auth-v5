@@ -20,7 +20,7 @@ export const sendVerificationEmail = async (
     try {
         const sendEmail = await resend.emails.send({
             from: "delivered@resend.dev",
-            to: "your own mail",
+            to: [ownerEmail],
             subject: "Confirm your email",
             html: `<p>Click <a href="${confirmLink}">here</a> to confirm your email.</p>`
         });

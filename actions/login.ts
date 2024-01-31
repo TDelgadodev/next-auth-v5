@@ -7,6 +7,7 @@ import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { User } from "@prisma/client";
+import { sendVerificationEmail } from "@/lib/mail";
 
 
 export const Login = async (values: z.infer<typeof LoginSchema>) => {
@@ -27,6 +28,8 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
 
     if (!existingUser.emailVerified) {
         const verificationToken = await generateVerificationToken(existingUser.email);
+
+        await sendVerificationEmail(verificationToken.email, verificationToken.token)
 
         return { sucess: "Confirmation email sent!" }
     }
