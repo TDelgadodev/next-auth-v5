@@ -32,8 +32,6 @@ export default {
           }
 
           if (!user || !user.password) return null;
-          console.log("auth.config:",user);
-          
 
           const passwordMatch = await bcryptjs.compare(password, user.password);
 
