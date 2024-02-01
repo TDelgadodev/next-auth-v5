@@ -33,4 +33,27 @@ export const sendVerificationEmail = async (
         throw error; 
     }
     
+};
+
+export const sendPasswordResetEmail =async (email:string, token: string) => {
+    const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
+
+    const ownerEmail = process.env.OWNER_EMAIL;
+
+    if (!ownerEmail) {
+        console.error("OWNER_EMAIL is undefined. Please set it in your environment variables.");
+        return; 
+    }
+
+    try {
+        await resend.emails.send({
+            from: "delivered@resend.dev",
+            to: [ownerEmail],
+            subject: "Reset your password",
+            html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+        })
+    } catch (error) {
+        console.error(`Error sending verification email to ${email}:`, error);
+        throw error; 
+    }
 }
