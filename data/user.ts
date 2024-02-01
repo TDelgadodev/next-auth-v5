@@ -7,6 +7,7 @@ interface User {
   password: string | null;
   emailVerified: Date | null;
   role: PrismaUserRole; 
+  isTwoFactorEnable: boolean | null; 
 }
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {

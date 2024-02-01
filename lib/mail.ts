@@ -57,3 +57,24 @@ export const sendPasswordResetEmail =async (email:string, token: string) => {
         throw error; 
     }
 }
+
+export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+    const ownerEmail = process.env.OWNER_EMAIL;
+
+    if (!ownerEmail) {
+        console.error("OWNER_EMAIL is undefined. Please set it in your environment variables.");
+        return; 
+    }
+
+    try {
+        await resend.emails.send({
+            from: "delivered@resend.dev",
+            to: [ownerEmail],
+            subject: "Two Factor Code",
+            html: `<p>Your two factor code: ${token}</p>`
+        })
+    } catch (error) {
+        console.error(`Error sending verification email to ${email}:`, error);
+        throw error; 
+    }
+}
