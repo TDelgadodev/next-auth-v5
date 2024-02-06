@@ -6,7 +6,7 @@ export const sendVerificationEmail = async (
     email: string,
     token: string,
 ) => {
-    const confirmLink = `http://localhost:3000/auth/new-verification?token=${token}`;
+    const confirmLink = `${process.env.BASE_URL_DEVELOPMENT}/auth/new-verification?token=${token}`;
 
     const ownerEmail = process.env.OWNER_EMAIL;
 
@@ -34,7 +34,7 @@ export const sendVerificationEmail = async (
 };
 
 export const sendPasswordResetEmail =async (email:string, token: string) => {
-    const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
+    const resetLink = `${process.env.BASE_URL_DEVELOPMENT}/auth/new-password?token=${token}`;
 
     const ownerEmail = process.env.OWNER_EMAIL;
 
