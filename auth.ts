@@ -38,8 +38,9 @@ export const {
 
       const existingUser = await getUserById(userId);
 
-      // Prevent sign in without email verification
-      if (!existingUser?.emailVerified) return false;
+      if (!existingUser || !existingUser.id) {
+        return false;
+      }
 
       if (existingUser.isTwoFactorEnable) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
@@ -80,13 +81,15 @@ export const {
 
       if (!existingUser) return token;
 
-      const existingAccount = await getAccountByUserId(existingUser.id);
+      if (existingUser && existingUser.id) {
+        const existingAccount = await getAccountByUserId(existingUser.id);    
+        token.isOAuth = !!existingAccount
+        token.name = existingUser.name;
+        token.email = existingUser.email
+        token.role = existingUser.role;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnable;
+      }
       
-      token.isOAuth = !!existingAccount
-      token.name = existingUser.name;
-      token.email = existingUser.email
-      token.role = existingUser.role;
-      token.isTwoFactorEnabled = existingUser.isTwoFactorEnable;
       return token;
     },
   },

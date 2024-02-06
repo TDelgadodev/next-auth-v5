@@ -1,6 +1,6 @@
 "use server";
 import * as z from "zod";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/passwordResetToken";
 import { getUserByEmail } from "@/data/user";
@@ -20,41 +20,40 @@ export const newPassword = async (
     return { error: "Invalid Fields!" };
   }
 
-  console.log(validatedFields);
-  
-  const { password } = validatedFields.data;
+  if (validatedFields.success) {
+    const { password } = validatedFields.data;
 
-  const existingToken = await getPasswordResetTokenByToken(token);
+    const existingToken = await getPasswordResetTokenByToken(token);
 
-  if (!existingToken) {
-    return { error: "Invalid token!" }
-  }
-
-  const hasExpired = new Date(existingToken.expires) < new Date();
-
-  if (hasExpired) {
-    return { error: "Token was expired!" }
-  }
-
-  const existingUser = await getUserByEmail(existingToken.email);
-
-  if (!existingUser) {
-    return { error: "Email does not exist!" }
-  }
-
-  const hashedPassword = await  bcrypt.hash(password, 10);
-
-  await db.user.update({
-    where: { id: existingUser.id },
-    data: { password: hashedPassword }
-  });
-
-  await db.passwordResetToken.delete({
-    where : {
-      id: existingToken.id
+    if (!existingToken) {
+      return { error: "Invalid token!" };
     }
-  });
 
+    const hasExpired = new Date(existingToken.expires) < new Date();
 
-  return { sucess: "Password updated!" }
+    if (hasExpired) {
+      return { error: "Token was expired!" };
+    }
+
+    const existingUser = await getUserByEmail(existingToken.email);
+
+    if (!existingUser) {
+      return { error: "Email does not exist!" };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await db.user.update({
+      where: { id: existingUser.id },
+      data: { password: hashedPassword },
+    });
+
+    await db.passwordResetToken.delete({
+      where: {
+        id: existingToken.id,
+      },
+    });
+  }
+
+  return { sucess: "Password updated!" };
 };
