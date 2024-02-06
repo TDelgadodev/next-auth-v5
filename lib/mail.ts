@@ -14,8 +14,6 @@ export const sendVerificationEmail = async (
         console.error("OWNER_EMAIL is undefined. Please set it in your environment variables.");
         return; 
     }
-
-    console.log(ownerEmail);
     
     try {
         const sendEmail = await resend.emails.send({

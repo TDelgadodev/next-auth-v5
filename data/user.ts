@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import { UserRole as PrismaUserRole } from "@prisma/client";
 
 interface User {
-  id: string;
+  id: string | undefined;
+  name: string | null;
   email: string | null;
   password: string | null;
   emailVerified: Date | null;
