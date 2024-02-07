@@ -13,6 +13,9 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" },
+  ...authConfig,
   pages: {
     signIn: "/auth/login",
     error: "/auth/error"
@@ -69,7 +72,7 @@ export const {
 
       if (session.user) {
         session.user.name = token.name;
-        session.user.email = token.email;    
+        session.user.email = token.email ?? ""; 
         session.user.isOAuth = token.isOAuth as boolean;    
       }
 
@@ -93,7 +96,4 @@ export const {
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
-  session: { strategy: "jwt" },
-  ...authConfig,
 });
